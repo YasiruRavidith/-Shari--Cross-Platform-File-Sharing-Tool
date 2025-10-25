@@ -44,3 +44,12 @@ coverage/
 *.pem
 *.key
 .cache/
+
+# Sensitive documentation files
+*DEBUG*.md
+*SUCCESS*.md
+*DEPLOYMENT_COMPLETE*.md
+*FIND_CONNECTION*.md
+*FIX_500*.md
+*.db_url.txt
+*fix-database-url.bat

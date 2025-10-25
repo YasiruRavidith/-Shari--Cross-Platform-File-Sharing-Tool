@@ -6,20 +6,34 @@ const TextList = ({ token }) => {
   const [texts, setTexts] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editContent, setEditContent] = useState('');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const fetchTexts = async () => {
+  const fetchTexts = async (showRefreshIndicator = false) => {
     try {
+      if (showRefreshIndicator) setIsRefreshing(true);
       const res = await axios.get(`${API_URL}/api/text`, {
         headers: { 'x-auth-token': token },
       });
       setTexts(res.data);
     } catch (err) {
       console.error('Error fetching texts:', err);
+    } finally {
+      if (showRefreshIndicator) {
+        setTimeout(() => setIsRefreshing(false), 500);
+      }
     }
   };
 
   useEffect(() => {
     fetchTexts();
+    
+    // Auto-refresh every 5 seconds for live updates across devices
+    const interval = setInterval(() => {
+      fetchTexts(true);
+    }, 5000);
+    
+    // Cleanup interval on unmount
+    return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
@@ -71,7 +85,26 @@ const TextList = ({ token }) => {
 
   return (
     <div>
-      <h3>Saved Texts</h3>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+        <h3 style={{ margin: 0 }}>
+          Saved Texts
+          {isRefreshing && <span style={{ marginLeft: '10px', fontSize: '12px', color: '#28a745' }}>🔄 Syncing...</span>}
+        </h3>
+        <button
+          onClick={() => fetchTexts(true)}
+          style={{
+            backgroundColor: '#17a2b8',
+            color: 'white',
+            border: 'none',
+            padding: '6px 12px',
+            borderRadius: '3px',
+            cursor: 'pointer',
+            fontSize: '12px'
+          }}
+        >
+          🔄 Refresh
+        </button>
+      </div>
       {texts.length === 0 ? (
         <p>No texts saved yet</p>
       ) : (

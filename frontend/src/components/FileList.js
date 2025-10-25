@@ -4,20 +4,34 @@ import API_URL from '../config';
 
 const FileList = ({ token }) => {
   const [files, setFiles] = useState([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const fetchFiles = async () => {
+  const fetchFiles = async (showRefreshIndicator = false) => {
     try {
+      if (showRefreshIndicator) setIsRefreshing(true);
       const res = await axios.get(`${API_URL}/api/files`, {
         headers: { 'x-auth-token': token },
       });
       setFiles(res.data);
     } catch (err) {
       console.error('Error fetching files:', err);
+    } finally {
+      if (showRefreshIndicator) {
+        setTimeout(() => setIsRefreshing(false), 500);
+      }
     }
   };
 
   useEffect(() => {
     fetchFiles();
+    
+    // Auto-refresh every 5 seconds for live updates across devices
+    const interval = setInterval(() => {
+      fetchFiles(true);
+    }, 5000);
+    
+    // Cleanup interval on unmount
+    return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
@@ -38,7 +52,26 @@ const FileList = ({ token }) => {
 
   return (
     <div>
-      <h3>Uploaded Files</h3>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+        <h3 style={{ margin: 0 }}>
+          Uploaded Files
+          {isRefreshing && <span style={{ marginLeft: '10px', fontSize: '12px', color: '#28a745' }}>🔄 Syncing...</span>}
+        </h3>
+        <button
+          onClick={() => fetchFiles(true)}
+          style={{
+            backgroundColor: '#17a2b8',
+            color: 'white',
+            border: 'none',
+            padding: '6px 12px',
+            borderRadius: '3px',
+            cursor: 'pointer',
+            fontSize: '12px'
+          }}
+        >
+          🔄 Refresh
+        </button>
+      </div>
       {files.length === 0 ? (
         <p>No files uploaded yet</p>
       ) : (

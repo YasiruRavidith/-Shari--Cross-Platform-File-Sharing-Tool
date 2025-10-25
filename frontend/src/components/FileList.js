@@ -90,12 +90,12 @@ const FileList = ({ token }) => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {files.map((file) => (
             <div key={file.id} className="item-card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', flexDirection: 'row' }}>
+              <div className="flex justify-between items-center gap-3 flex-wrap">
                 <div style={{ flex: '1', wordBreak: 'break-all', color: '#374151', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <File size={18} color="#667eea" />
                   {file.filename}
                 </div>
-                <div className="file-actions">
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   <button
                     onClick={() => downloadFile(file.filepath, file.filename)}
                     className="btn btn-primary"

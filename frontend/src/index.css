@@ -306,13 +306,13 @@ code {
 /* Sidebar Styles */
 .sidebar {
   position: fixed;
-  left: 0;
+  right: 0;
   top: 0;
   width: 280px;
   height: 100vh;
   background: white;
-  border-right: 1px solid #e5e7eb;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  border-left: 1px solid #e5e7eb;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.05);
   z-index: 1000;
   transition: transform 0.3s ease;
 }
@@ -364,7 +364,7 @@ code {
 
 @media (max-width: 768px) {
   .sidebar {
-    transform: translateX(-100%);
+    transform: translateX(100%);
   }
 
   .sidebar-open {
@@ -387,7 +387,7 @@ code {
   }
 
   main {
-    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 }
 

@@ -18,7 +18,7 @@ const Dashboard = ({ token, onLogout }) => {
         style={{
           position: 'fixed',
           top: '16px',
-          left: '16px',
+          right: '16px',
           zIndex: 1001,
           display: 'none',
           background: '#667eea',
@@ -31,6 +31,47 @@ const Dashboard = ({ token, onLogout }) => {
       >
         {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
+
+      {/* Main Content */}
+      <main style={{ flex: 1, padding: '24px', marginRight: '280px', transition: 'margin-right 0.3s ease' }}>
+        <div style={{ maxWidth: '1000px' }}>
+          {/* File Section */}
+          {activeSection === 'files' && (
+            <div className="card">
+              <div className="section-header">
+                <FolderOpen size={28} color="#667eea" />
+                <h2 className="section-title">Files</h2>
+              </div>
+              <FileUpload token={token} />
+              <div className="mt-6">
+                <FileList token={token} />
+              </div>
+            </div>
+          )}
+
+          {/* Text Section */}
+          {activeSection === 'texts' && (
+            <div className="card">
+              <div className="section-header">
+                <FileText size={28} color="#667eea" />
+                <h2 className="section-title">Texts</h2>
+              </div>
+              <TextPaste token={token} />
+              <div className="mt-6">
+                <TextList token={token} />
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
+
+      {/* Overlay for mobile */}
+      {sidebarOpen && (
+        <div 
+          className="sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
       {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
@@ -74,47 +115,6 @@ const Dashboard = ({ token, onLogout }) => {
           </div>
         </nav>
       </aside>
-
-      {/* Overlay for mobile */}
-      {sidebarOpen && (
-        <div 
-          className="sidebar-overlay"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Main Content */}
-      <main style={{ flex: 1, padding: '24px', marginLeft: '280px', transition: 'margin-left 0.3s ease' }}>
-        <div style={{ maxWidth: '1000px' }}>
-          {/* File Section */}
-          {activeSection === 'files' && (
-            <div className="card">
-              <div className="section-header">
-                <FolderOpen size={28} color="#667eea" />
-                <h2 className="section-title">Files</h2>
-              </div>
-              <FileUpload token={token} />
-              <div className="mt-6">
-                <FileList token={token} />
-              </div>
-            </div>
-          )}
-
-          {/* Text Section */}
-          {activeSection === 'texts' && (
-            <div className="card">
-              <div className="section-header">
-                <FileText size={28} color="#667eea" />
-                <h2 className="section-title">Texts</h2>
-              </div>
-              <TextPaste token={token} />
-              <div className="mt-6">
-                <TextList token={token} />
-              </div>
-            </div>
-          )}
-        </div>
-      </main>
     </div>
   );
 };

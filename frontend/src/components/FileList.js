@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import API_URL from '../config';
-import { Trash2, File, FolderOpen } from 'lucide-react';
+import { Trash2, File, FolderOpen, Download } from 'lucide-react';
 
 const FileList = ({ token }) => {
   const [files, setFiles] = useState([]);
@@ -45,6 +45,16 @@ const FileList = ({ token }) => {
     }
   };
 
+  const downloadFile = (filepath, filename) => {
+    const link = document.createElement('a');
+    link.href = filepath;
+    link.download = filename;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
@@ -65,23 +75,28 @@ const FileList = ({ token }) => {
           {files.map((file) => (
             <div key={file.id} className="item-card">
               <div className="flex justify-between items-center gap-3 flex-wrap">
-                <a
-                  href={file.filepath}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ flex: '1', wordBreak: 'break-all', color: '#374151', fontWeight: '500', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}
-                >
+                <div style={{ flex: '1', wordBreak: 'break-all', color: '#374151', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <File size={18} color="#667eea" />
                   {file.filename}
-                </a>
-                <button
-                  onClick={() => deleteFile(file.id)}
-                  className="btn btn-danger"
-                  style={{ fontSize: '13px', padding: '8px 16px' }}
-                >
-                  <Trash2 size={16} />
-                  Delete
-                </button>
+                </div>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  <button
+                    onClick={() => downloadFile(file.filepath, file.filename)}
+                    className="btn btn-primary"
+                    style={{ fontSize: '13px', padding: '8px 16px' }}
+                  >
+                    <Download size={16} />
+                    Download
+                  </button>
+                  <button
+                    onClick={() => deleteFile(file.id)}
+                    className="btn btn-danger"
+                    style={{ fontSize: '13px', padding: '8px 16px' }}
+                  >
+                    <Trash2 size={16} />
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           ))}

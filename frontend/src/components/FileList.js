@@ -45,14 +45,30 @@ const FileList = ({ token }) => {
     }
   };
 
-  const downloadFile = (filepath, filename) => {
-    const link = document.createElement('a');
-    link.href = filepath;
-    link.download = filename;
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const downloadFile = async (filepath, filename) => {
+    try {
+      // Fetch the file as a blob
+      const response = await fetch(filepath);
+      const blob = await response.blob();
+      
+      // Create a blob URL
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      // Create a temporary link and trigger download
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      
+      // Clean up
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.error('Error downloading file:', err);
+      // Fallback: open in new tab
+      window.open(filepath, '_blank');
+    }
   };
 
   return (

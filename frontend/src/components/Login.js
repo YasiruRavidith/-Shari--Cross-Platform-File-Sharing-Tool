@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import API_URL from '../config';
-import { Lock, LogIn, Loader2, Eye, EyeOff } from 'lucide-react';
+import { Lock, LogIn, Loader2, Eye, EyeOff, Share2 } from 'lucide-react';
 
 const Login = ({ onLogin }) => {
   const [password, setPassword] = useState('');
@@ -24,9 +24,12 @@ const Login = ({ onLogin }) => {
   return (
     <div className="container">
       <div className="header-card mb-6">
-        <h1 style={{ fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontWeight: '900', margin: '0 0 8px 0' }}>
-          Shari
-        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginBottom: '8px' }}>
+          <Share2 size={40} color="white" strokeWidth={2.5} />
+          <h1 style={{ fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontWeight: '900', margin: 0 }}>
+            Shari
+          </h1>
+        </div>
         <p style={{ fontSize: 'clamp(0.9rem, 2vw, 1.1rem)', opacity: 0.9, margin: 0 }}>
           Cross-Platform File Sharing Tool
         </p>

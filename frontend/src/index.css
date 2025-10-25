@@ -400,6 +400,13 @@ code {
   }
 }
 
+/* File Actions Container */
+.file-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 @media (max-width: 640px) {
   .container {
     padding: 16px;
@@ -411,6 +418,16 @@ code {
   
   .section-title {
     font-size: 20px;
+  }
+  
+  /* Stack file action buttons vertically on mobile */
+  .file-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .file-actions .btn {
+    width: 100%;
   }
 }
 

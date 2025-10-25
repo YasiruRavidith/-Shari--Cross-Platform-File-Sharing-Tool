@@ -81,14 +81,10 @@ const TextList = ({ token }) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
-        <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#1f2937', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#1f2937', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
           Saved Texts
           {isRefreshing && <span className="badge pulse">Syncing...</span>}
         </h3>
-        <button onClick={() => fetchTexts(true)} className="btn btn-secondary" style={{ fontSize: '13px', padding: '8px 16px' }}>
-          <RefreshCw size={16} />
-          Refresh
-        </button>
       </div>
       
       {texts.length === 0 ? (

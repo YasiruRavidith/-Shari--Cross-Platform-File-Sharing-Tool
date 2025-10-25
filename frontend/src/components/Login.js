@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import API_URL from '../config';
+import { Lock, LogIn, Loader2 } from 'lucide-react';
 
 const Login = ({ onLogin }) => {
   const [password, setPassword] = useState('');
@@ -13,55 +14,81 @@ const Login = ({ onLogin }) => {
       const res = await axios.post(`${API_URL}/api/login`, { password });
       onLogin(res.data.token);
     } catch (err) {
-      alert('❌ Login failed! Please check your password.');
+      alert('Login failed! Please check your password.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="backdrop-blur-lg bg-white/20 rounded-3xl shadow-2xl p-8 sm:p-12 w-full max-w-md border border-white/30">
-        <div className="text-center mb-8">
-          <div className="text-6xl mb-4">🔐</div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">Welcome Back</h2>
-          <p className="text-white/70 text-sm sm:text-base">Enter your password to continue</p>
-        </div>
+    <div className="container">
+      <div className="header-card mb-6">
+        <h1 style={{ fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontWeight: '900', margin: '0 0 8px 0' }}>
+          Shari
+        </h1>
+        <p style={{ fontSize: 'clamp(0.9rem, 2vw, 1.1rem)', opacity: 0.9, margin: 0 }}>
+          Cross-Platform File Sharing Tool
+        </p>
+      </div>
 
-        <form onSubmit={onSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="password" className="block text-white/90 font-medium mb-2 text-sm sm:text-base">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Enter your password"
-              className="w-full px-6 py-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/30 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200"
-            />
+      <div style={{ maxWidth: '450px', margin: '0 auto' }}>
+        <div className="card">
+          <div className="text-center mb-6">
+            <div style={{ 
+              width: '64px', 
+              height: '64px', 
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              borderRadius: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px'
+            }}>
+              <Lock size={32} color="white" />
+            </div>
+            <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#1f2937', margin: '0 0 8px 0' }}>
+              Welcome Back
+            </h2>
+            <p style={{ fontSize: '14px', color: '#6b7280', margin: 0 }}>
+              Enter your password to continue
+            </p>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-4 px-6 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-          >
-            {loading ? (
-              <span className="flex items-center justify-center">
-                <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
-                </svg>
-                Logging in...
-              </span>
-            ) : (
-              '🚀 Login'
-            )}
-          </button>
-        </form>
+          <form onSubmit={onSubmit}>
+            <div className="mb-4">
+              <label htmlFor="password" style={{ display: 'block', fontWeight: '600', marginBottom: '8px', fontSize: '14px', color: '#374151' }}>
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="Enter your password"
+                className="input"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary w-full"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={18} className="spinner" />
+                  Logging in...
+                </>
+              ) : (
+                <>
+                  <LogIn size={18} />
+                  Login
+                </>
+              )}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import API_URL from '../config';
+import { RefreshCw, Trash2, File, FolderOpen } from 'lucide-react';
 
 const FileList = ({ token }) => {
   const [files, setFiles] = useState([]);
@@ -24,13 +25,7 @@ const FileList = ({ token }) => {
 
   useEffect(() => {
     fetchFiles();
-    
-    // Auto-refresh every 5 seconds for live updates across devices
-    const interval = setInterval(() => {
-      fetchFiles(true);
-    }, 5000);
-    
-    // Cleanup interval on unmount
+    const interval = setInterval(() => fetchFiles(true), 5000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
@@ -42,7 +37,7 @@ const FileList = ({ token }) => {
           headers: { 'x-auth-token': token },
         });
         alert('File deleted successfully');
-        fetchFiles(); // Refresh the list
+        fetchFiles();
       } catch (err) {
         console.error('Error deleting file:', err);
         alert('Error deleting file');
@@ -52,46 +47,44 @@ const FileList = ({ token }) => {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
-        <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center">
-          📦 Uploaded Files
-          {isRefreshing && <span className="ml-3 text-sm text-green-300 animate-pulse">🔄 Syncing...</span>}
+      <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
+        <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#1f2937', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          Uploaded Files
+          {isRefreshing && <span className="badge pulse">Syncing...</span>}
         </h3>
-        <button
-          onClick={() => fetchFiles(true)}
-          className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-semibold py-2 px-6 rounded-full border border-white/30 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-sm"
-        >
-          🔄 Refresh
+        <button onClick={() => fetchFiles(true)} className="btn btn-secondary" style={{ fontSize: '13px', padding: '8px 16px' }}>
+          <RefreshCw size={16} />
+          Refresh
         </button>
       </div>
       
       {files.length === 0 ? (
-        <div className="text-center py-12 text-white/60">
-          <div className="text-6xl mb-4">📂</div>
-          <p className="text-lg">No files uploaded yet</p>
-          <p className="text-sm mt-2">Upload your first file to get started!</p>
+        <div className="empty-state">
+          <FolderOpen size={64} color="#d1d5db" style={{ margin: '0 auto 16px' }} />
+          <p style={{ fontSize: '16px', fontWeight: '600', margin: '0 0 8px 0' }}>No files uploaded yet</p>
+          <p style={{ fontSize: '14px', margin: 0 }}>Upload your first file to get started!</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {files.map((file) => (
-            <div 
-              key={file.id} 
-              className="backdrop-blur-sm bg-white/10 rounded-2xl p-4 sm:p-5 border border-white/20 hover:bg-white/20 transition-all duration-200 group"
-            >
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div key={file.id} className="item-card">
+              <div className="flex justify-between items-center gap-3 flex-wrap">
                 <a
                   href={file.filepath}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white hover:text-purple-200 transition-colors duration-200 flex-1 break-all group-hover:underline font-medium"
+                  style={{ flex: '1', wordBreak: 'break-all', color: '#374151', fontWeight: '500', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}
                 >
-                  📄 {file.filename}
+                  <File size={18} color="#667eea" />
+                  {file.filename}
                 </a>
                 <button
                   onClick={() => deleteFile(file.id)}
-                  className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-sm whitespace-nowrap"
+                  className="btn btn-danger"
+                  style={{ fontSize: '13px', padding: '8px 16px' }}
                 >
-                  🗑️ Delete
+                  <Trash2 size={16} />
+                  Delete
                 </button>
               </div>
             </div>

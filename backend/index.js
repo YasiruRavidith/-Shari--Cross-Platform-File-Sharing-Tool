@@ -163,6 +163,38 @@ app.get('/api/files/:id', auth, async (req, res) => {
   }
 });
 
+// Delete file route
+app.delete('/api/files/:id', auth, async (req, res) => {
+  try {
+    const file = await pool.query('SELECT * FROM files WHERE id = $1', [req.params.id]);
+    
+    if (file.rows.length === 0) {
+      return res.status(404).json({ msg: 'File not found' });
+    }
+
+    // Extract filename from filepath
+    const filepath = file.rows[0].filepath;
+    const filename = filepath.split('/').pop(); // Get last part of URL
+
+    // Delete from Supabase Storage
+    const { error } = await supabase.storage
+      .from('files')
+      .remove([filename]);
+
+    if (error) {
+      console.error('Supabase delete error:', error);
+    }
+
+    // Delete from database
+    await pool.query('DELETE FROM files WHERE id = $1', [req.params.id]);
+
+    res.json({ msg: 'File deleted successfully' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server error', error: err.message });
+  }
+});
+
 // Text paste routes
 app.post('/api/text', auth, async (req, res) => {
   const { content } = req.body;
@@ -182,6 +214,41 @@ app.get('/api/text', auth, async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
+  }
+});
+
+// Update text route
+app.put('/api/text/:id', auth, async (req, res) => {
+  const { content } = req.body;
+  try {
+    const text = await pool.query('SELECT * FROM texts WHERE id = $1', [req.params.id]);
+    
+    if (text.rows.length === 0) {
+      return res.status(404).json({ msg: 'Text not found' });
+    }
+
+    await pool.query('UPDATE texts SET content = $1 WHERE id = $2', [content, req.params.id]);
+    res.json({ msg: 'Text updated successfully' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server error', error: err.message });
+  }
+});
+
+// Delete text route
+app.delete('/api/text/:id', auth, async (req, res) => {
+  try {
+    const text = await pool.query('SELECT * FROM texts WHERE id = $1', [req.params.id]);
+    
+    if (text.rows.length === 0) {
+      return res.status(404).json({ msg: 'Text not found' });
+    }
+
+    await pool.query('DELETE FROM texts WHERE id = $1', [req.params.id]);
+    res.json({ msg: 'Text deleted successfully' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server error', error: err.message });
   }
 });
 

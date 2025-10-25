@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import API_URL from '../config';
-import { RefreshCw, Copy, Edit2, Trash2, Save, X, FileText } from 'lucide-react';
+import { Copy, Edit2, Trash2, Save, X, FileText } from 'lucide-react';
 
 const TextList = ({ token }) => {
   const [texts, setTexts] = useState([]);

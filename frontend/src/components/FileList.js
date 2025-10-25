@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import API_URL from '../config';
-import { RefreshCw, Trash2, File, FolderOpen } from 'lucide-react';
+import { Trash2, File, FolderOpen } from 'lucide-react';
 
 const FileList = ({ token }) => {
   const [files, setFiles] = useState([]);

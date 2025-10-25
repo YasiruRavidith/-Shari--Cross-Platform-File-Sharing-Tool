@@ -52,64 +52,51 @@ const FileList = ({ token }) => {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-        <h3 style={{ margin: 0 }}>
-          Uploaded Files
-          {isRefreshing && <span style={{ marginLeft: '10px', fontSize: '12px', color: '#28a745' }}>🔄 Syncing...</span>}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+        <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center">
+          📦 Uploaded Files
+          {isRefreshing && <span className="ml-3 text-sm text-green-300 animate-pulse">🔄 Syncing...</span>}
         </h3>
         <button
           onClick={() => fetchFiles(true)}
-          style={{
-            backgroundColor: '#17a2b8',
-            color: 'white',
-            border: 'none',
-            padding: '6px 12px',
-            borderRadius: '3px',
-            cursor: 'pointer',
-            fontSize: '12px'
-          }}
+          className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-semibold py-2 px-6 rounded-full border border-white/30 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-sm"
         >
           🔄 Refresh
         </button>
       </div>
+      
       {files.length === 0 ? (
-        <p>No files uploaded yet</p>
+        <div className="text-center py-12 text-white/60">
+          <div className="text-6xl mb-4">📂</div>
+          <p className="text-lg">No files uploaded yet</p>
+          <p className="text-sm mt-2">Upload your first file to get started!</p>
+        </div>
       ) : (
-        <ul style={{ listStyle: 'none', padding: 0 }}>
+        <div className="space-y-3">
           {files.map((file) => (
-            <li key={file.id} style={{ 
-              marginBottom: '10px', 
-              padding: '10px', 
-              border: '1px solid #ddd', 
-              borderRadius: '5px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}>
-              <a
-                href={file.filepath}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: 'none', color: '#007bff', flex: 1 }}
-              >
-                {file.filename}
-              </a>
-              <button
-                onClick={() => deleteFile(file.id)}
-                style={{
-                  backgroundColor: '#dc3545',
-                  color: 'white',
-                  border: 'none',
-                  padding: '5px 15px',
-                  borderRadius: '3px',
-                  cursor: 'pointer'
-                }}
-              >
-                Delete
-              </button>
-            </li>
+            <div 
+              key={file.id} 
+              className="backdrop-blur-sm bg-white/10 rounded-2xl p-4 sm:p-5 border border-white/20 hover:bg-white/20 transition-all duration-200 group"
+            >
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <a
+                  href={file.filepath}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-purple-200 transition-colors duration-200 flex-1 break-all group-hover:underline font-medium"
+                >
+                  📄 {file.filename}
+                </a>
+                <button
+                  onClick={() => deleteFile(file.id)}
+                  className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-sm whitespace-nowrap"
+                >
+                  🗑️ Delete
+                </button>
+              </div>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

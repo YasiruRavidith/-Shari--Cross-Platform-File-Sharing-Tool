@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import API_URL from '../config';
 
@@ -26,20 +26,13 @@ const TextList = ({ token }) => {
 
   useEffect(() => {
     fetchTexts();
-    
-    // Auto-refresh every 5 seconds for live updates across devices
-    const interval = setInterval(() => {
-      fetchTexts(true);
-    }, 5000);
-    
-    // Cleanup interval on unmount
+    const interval = setInterval(() => fetchTexts(true), 5000);
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
-    alert('Copied to clipboard!');
+    alert('✓ Copied to clipboard!');
   };
 
   const startEdit = (text) => {
@@ -58,13 +51,13 @@ const TextList = ({ token }) => {
         { content: editContent },
         { headers: { 'x-auth-token': token } }
       );
-      alert('Text updated successfully');
+      alert('✓ Text updated successfully!');
       setEditingId(null);
       setEditContent('');
-      fetchTexts(); // Refresh the list
+      fetchTexts();
     } catch (err) {
       console.error('Error updating text:', err);
-      alert('Error updating text');
+      alert('✗ Error updating text!');
     }
   };
 
@@ -74,150 +67,57 @@ const TextList = ({ token }) => {
         await axios.delete(`${API_URL}/api/text/${id}`, {
           headers: { 'x-auth-token': token },
         });
-        alert('Text deleted successfully');
-        fetchTexts(); // Refresh the list
+        alert('✓ Text deleted successfully!');
+        fetchTexts();
       } catch (err) {
         console.error('Error deleting text:', err);
-        alert('Error deleting text');
+        alert('✗ Error deleting text!');
       }
     }
   };
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-        <h3 style={{ margin: 0 }}>
-          Saved Texts
-          {isRefreshing && <span style={{ marginLeft: '10px', fontSize: '12px', color: '#28a745' }}>🔄 Syncing...</span>}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+        <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center">
+          📝 Saved Texts
+          {isRefreshing && <span className="ml-3 text-sm text-green-300 animate-pulse">🔄 Syncing...</span>}
         </h3>
-        <button
-          onClick={() => fetchTexts(true)}
-          style={{
-            backgroundColor: '#17a2b8',
-            color: 'white',
-            border: 'none',
-            padding: '6px 12px',
-            borderRadius: '3px',
-            cursor: 'pointer',
-            fontSize: '12px'
-          }}
-        >
+        <button onClick={() => fetchTexts(true)} className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-semibold py-2 px-6 rounded-full border border-white/30 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-sm">
           🔄 Refresh
         </button>
       </div>
       {texts.length === 0 ? (
-        <p>No texts saved yet</p>
+        <div className="text-center py-12 text-white/60">
+          <div className="text-6xl mb-4">📝</div>
+          <p className="text-lg">No texts saved yet</p>
+          <p className="text-sm mt-2">Save your first text snippet above!</p>
+        </div>
       ) : (
-        texts.map((text) => (
-          <div key={text.id} style={{ 
-            marginBottom: '15px', 
-            padding: '15px', 
-            border: '1px solid #ddd', 
-            borderRadius: '5px',
-            backgroundColor: '#f9f9f9'
-          }}>
-            {editingId === text.id ? (
-              <>
-                <textarea
-                  value={editContent}
-                  onChange={(e) => setEditContent(e.target.value)}
-                  style={{
-                    width: '100%',
-                    minHeight: '100px',
-                    padding: '10px',
-                    fontSize: '14px',
-                    fontFamily: 'monospace',
-                    border: '1px solid #ccc',
-                    borderRadius: '3px'
-                  }}
-                />
-                <div style={{ marginTop: '10px' }}>
-                  <button
-                    onClick={() => saveEdit(text.id)}
-                    style={{
-                      backgroundColor: '#28a745',
-                      color: 'white',
-                      border: 'none',
-                      padding: '8px 15px',
-                      borderRadius: '3px',
-                      cursor: 'pointer',
-                      marginRight: '10px'
-                    }}
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={cancelEdit}
-                    style={{
-                      backgroundColor: '#6c757d',
-                      color: 'white',
-                      border: 'none',
-                      padding: '8px 15px',
-                      borderRadius: '3px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Cancel
-                  </button>
+        <div className="space-y-4">
+          {texts.map((text) => (
+            <div key={text.id} className="backdrop-blur-sm bg-white/10 rounded-3xl p-5 sm:p-6 border border-white/20 hover:bg-white/15 transition-all duration-200">
+              {editingId === text.id ? (
+                <div className="space-y-4">
+                  <textarea value={editContent} onChange={(e) => setEditContent(e.target.value)} className="w-full px-6 py-4 rounded-3xl bg-white/10 backdrop-blur-sm border border-white/30 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 resize-none font-mono text-sm sm:text-base min-h-[120px]" />
+                  <div className="flex flex-wrap gap-3">
+                    <button onClick={() => saveEdit(text.id)} className="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-sm">💾 Save</button>
+                    <button onClick={cancelEdit} className="bg-white/20 hover:bg-white/30 text-white font-semibold py-2 px-6 rounded-full border border-white/30 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-sm">❌ Cancel</button>
+                  </div>
                 </div>
-              </>
-            ) : (
-              <>
-                <pre style={{ 
-                  margin: '0 0 10px 0', 
-                  whiteSpace: 'pre-wrap', 
-                  wordWrap: 'break-word',
-                  backgroundColor: 'white',
-                  padding: '10px',
-                  borderRadius: '3px'
-                }}>
-                  {text.content}
-                </pre>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button 
-                    onClick={() => copyToClipboard(text.content)}
-                    style={{
-                      backgroundColor: '#007bff',
-                      color: 'white',
-                      border: 'none',
-                      padding: '8px 15px',
-                      borderRadius: '3px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Copy
-                  </button>
-                  <button 
-                    onClick={() => startEdit(text)}
-                    style={{
-                      backgroundColor: '#ffc107',
-                      color: 'black',
-                      border: 'none',
-                      padding: '8px 15px',
-                      borderRadius: '3px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button 
-                    onClick={() => deleteText(text.id)}
-                    style={{
-                      backgroundColor: '#dc3545',
-                      color: 'white',
-                      border: 'none',
-                      padding: '8px 15px',
-                      borderRadius: '3px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Delete
-                  </button>
+              ) : (
+                <div className="space-y-4">
+                  <pre className="whitespace-pre-wrap break-words bg-white/5 backdrop-blur-sm p-4 rounded-2xl text-white/90 font-mono text-sm sm:text-base border border-white/10">{text.content}</pre>
+                  <div className="flex flex-wrap gap-3">
+                    <button onClick={() => copyToClipboard(text.content)} className="bg-gradient-to-r from-blue-400 to-cyan-500 hover:from-blue-500 hover:to-cyan-600 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-sm">📋 Copy</button>
+                    <button onClick={() => startEdit(text)} className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-sm">✏️ Edit</button>
+                    <button onClick={() => deleteText(text.id)} className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-sm">🗑️ Delete</button>
+                  </div>
                 </div>
-              </>
-            )}
-          </div>
-        ))
+              )}
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

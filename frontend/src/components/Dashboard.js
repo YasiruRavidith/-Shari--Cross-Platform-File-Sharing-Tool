@@ -34,7 +34,7 @@ const Dashboard = ({ token, onLogout }) => {
 
       {/* Main Content */}
       <main style={{ flex: 1, padding: '24px', marginRight: '280px', transition: 'margin-right 0.3s ease' }}>
-        <div style={{ maxWidth: '1000px' }}>
+        <div style={{ maxWidth: '1580px' }}>
           {/* File Section */}
           {activeSection === 'files' && (
             <div className="card">

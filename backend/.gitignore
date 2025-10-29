@@ -1,8 +1,12 @@
 node_modules/
 .env
+.env.local
+.env.development
+.env.production
+.env.vercel
+.env.test
 .vercel
 uploads/
 *.log
 .DS_Store
-.env.vercel
-.env.production
+.pooler_url.txt

@@ -1,1 +1,0 @@
-postgresql://postgres.iyaakahzlqphttpuwxog:Yasiru_%40_20031129@aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres

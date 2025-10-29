@@ -191,12 +191,14 @@ Just follow **START_HERE.md** step by step.
 | **COMMANDS.md** | Command reference |
 | **DEPLOYMENT_GUIDE.md** | Detailed guide |
 | **QUICK_START.md** | Quick reference |
+| **SECURITY.md** | Security guidelines |
 | **README.md** | This file |
 
 **Technical Files:**
 - 🔧 `.env.example` — Environment variables template  
 - 🗄️ `schema.sql` — Database schema  
 - 🚫 `.gitignore` — Git ignore rules  
+- 🔒 `SECURITY.md` — Security guidelines and best practices
 
 ---
 

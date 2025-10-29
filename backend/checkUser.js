@@ -29,7 +29,7 @@ async function checkUser() {
       
       // Test password comparison
       console.log('Testing password verification...');
-      const testPassword = 'Yasiru_@_20031129';
+      const testPassword = 'yourpassword';
       const isMatch = await bcrypt.compare(testPassword, result.rows[0].password);
       
       if (isMatch) {
